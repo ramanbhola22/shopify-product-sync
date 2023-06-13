@@ -1,0 +1,155 @@
+openapi: '3.0.0'
+info:
+  title: Product API
+  version: '1.0.0'
+  description: In order to react in real time primarily for excise tax
+  calculations, Token of Trust needs to have product information on hand. To help
+  facilitate integrations of that product information we’ve developed an API to
+  allow product master data source systems to push that product information to Token of Trust so that transactions can be handled quickly. We currently only
+  support vape products but others may be supported soon.
+servers:
+  - url: 'https://test.tokenoftrust.com'
+    description: 'Test server'
+  - url: 'https://app.tokenoftrust.com'
+    description: 'Production server'
+paths:
+  /api/product:
+    post:
+      summary: Update a product
+      description: Update a product.
+      operationId: setProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetProductOptions'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+
+  /api/product/{sku}:
+    get:
+      summary: Get a product
+      description: Get a product.
+      operationId: getProduct
+      parameters:
+        - in: path
+          name: sku
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+
+components:
+  schemas:
+    SetProductOptions:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: SKU - Stock Keeping Unit.
+        isExempt:
+          type: boolean
+          description: true when this product should be considered exempted from vape taxes.
+        name:
+          type: string
+          description: A descriptive name for the product generally displayed in the store.
+        brand:
+          type: string
+          description: The brand name of the product.
+        volumeInMl:
+          type: number
+          description: The volume of liquid in mls.
+        wholesaleCost:
+          type: number
+          description: The cost to the wholesaler.
+        wholesalePrice:
+          type: number
+          description: The price the wholesaler sets.
+        msrp:
+          type: number
+          description: Manufacturers suggested retail price of the product.
+        retailPrice:
+          type: number
+          description: Retail Price of the product.
+        hasNicotine:
+          type: boolean
+          description: True if the product has nicotine.
+        vapeSystemType:
+          type: string
+          description: The type of vape system.
+        packQuantity:
+          type: number
+          description: If a pack - the number of identical items in the pack.
+        bundleConfig:
+          type: object  
+        additionalProperties:
+          type: number
+          description: A map of product skus to quantity for all of the products in the bundle.
+        custom:
+          type: string
+          description: A freeform custom field.
+        messages:
+          type: array
+          items:
+            type: object
+            required: ["messageType", "message"]
+            properties:
+              messageType:
+                type: string
+                enum: ["error", "warning", "info"]
+                description: The type of message.
+              message:
+                type: string
+                description: A freeform message.
+              details:
+                type: object
+                description: Allows for undisclosed structured details to beadded.
+              relatedField:
+                type: string
+                description: Optionally, the field the error relates to.
+    ProductResponse:
+      type: object
+      properties:
+        content:
+        type: object
+          properties:
+            product:
+              $ref: '#/components/schemas/Product'
+    Message:
+      type: object
+      properties:
+        messageType:
+          type: string
+          enum: ["error", "warning", "info"]
+          description: The type of message.
+        message:
+          type: string
+          description: A freeform message.
+        details:
+          type: object
+          description: Allows for undisclosed structured details to be added.
+        relatedField:
+          type: string
+          description: Optionally, the field the error relates to.
+    BundleConfig:
+      type: object
+      additionalProperties:
+        type: number
+        description: A map of product skus to quantity for all of the products in the bundle.

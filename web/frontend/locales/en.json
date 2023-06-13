@@ -1,0 +1,14 @@
+{
+  "HomePage": {
+    "title": "Product Sync Shopify App",
+    "heading": "Welcome to Product Sync Shopify App 🎉",
+    "subHeading": "This app will allow to add Excise Tax Product Type in products with relative fields"
+  },
+  "NavigationMenu": {
+    "pageName": "Page name"
+  },
+  "NotFound": {
+    "description": "Check the URL and try again, or use the search bar to find what you need.",
+    "heading": "There is no page at this address"
+  }
+}
