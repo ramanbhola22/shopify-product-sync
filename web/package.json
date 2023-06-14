@@ -16,6 +16,7 @@
   "dependencies": {
     "@shopify/shopify-app-express": "^2.1.1",
     "@shopify/shopify-app-session-storage-sqlite": "^1.2.2",
+    "axios": "^1.4.0",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "dotenv": "^16.1.4",

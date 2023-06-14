@@ -1,4 +1,4 @@
 # This file stores configurations for your Shopify app.
 
 name = "Phase2"
-scopes = "read_products,write_products,write_metaobject_definitions,read_metaobject_definitions"
+scopes = "read_products,write_products,write_metaobject_definitions,read_metaobject_definitions,read_metaobjects"

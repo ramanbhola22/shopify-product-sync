@@ -6,7 +6,7 @@ import serveStatic from "serve-static";
 
 import shopify from "./shopify.js";
 import webhookHandlers from "./webhook-handlers.js";
-import { syncMetaFields } from "./utils/shopify.js";
+import { syncMetaFields, syncWebhook } from "./utils/shopify.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -26,7 +26,7 @@ app.get(
   shopify.config.auth.callbackPath,
   shopify.auth.callback(),
   shopify.redirectToShopifyOrAppRoot()
-);
+);  
 
 app.post(
   shopify.config.webhooks.path,
@@ -42,6 +42,7 @@ app.use(express.json());
 
 app.get("/api/sync/all", async (_req, res) => {
   await syncMetaFields(res.locals.shopify.session);
+  await syncWebhook(res.locals.shopify.session);
   res.status(200).send({ status: true });
 });
 

@@ -1,4 +1,5 @@
 import { DeliveryMethod } from "@shopify/shopify-api";
+import { syncProductToToT } from "./utils/shopify.js";
 
 /**
  * @type {{[key: string]: import("@shopify/shopify-api").WebhookHandler}}
@@ -65,22 +66,21 @@ export default {
     },
   },
 
-  /**
-   * 48 hours after a store owner uninstalls your app, Shopify invokes this
-   * webhook.
-   *
-   * https://shopify.dev/docs/apps/webhooks/configuration/mandatory-webhooks#shop-redact
-   */
-  SHOP_REDACT: {
+  PRODUCTS_CREATE: {
     deliveryMethod: DeliveryMethod.Http,
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
-      // Payload has the following shape:
-      // {
-      //   "shop_id": 954889,
-      //   "shop_domain": "{shop}.myshopify.com"
-      // }
+      await syncProductToToT(payload, shop);
+    },
+  },
+
+  PRODUCTS_UPDATE: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      const payload = JSON.parse(body);
+      await syncProductToToT(payload, shop);
     },
   },
 
